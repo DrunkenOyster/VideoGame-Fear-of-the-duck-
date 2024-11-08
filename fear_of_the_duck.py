@@ -114,6 +114,7 @@ def game_loop():
     player, duck = reset_level()
     timer_start = time.time()
     clock = pygame.time.Clock()
+    winner = False
 
     running = True
     while running:
@@ -129,7 +130,9 @@ def game_loop():
                 player, duck = reset_level(player_speed=5, duck_speed=3, duck_size=(60, 60))  # Duck speed at 3, larger size for level 3
             else:
                 print("You won!")
+                winner = True
                 break
+
             timer_start = time.time()
 
         for event in pygame.event.get():
@@ -161,11 +164,15 @@ def game_loop():
         pygame.display.flip()
 
     # Game Over: Ask if the player wants to restart
-    game_over_screen()
+    game_over_screen(winner)
 
-def game_over_screen():
+
+def game_over_screen(result):
     window.fill((144, 238, 144))
-    game_over_text = welcome_font.render("Game Over", True, (255, 0, 0))
+    if result:
+        game_over_text = welcome_font.render("You won!", True, (0, 100, 0))
+    else:
+        game_over_text = welcome_font.render("Game Over", True, (255, 0, 0))
     retry_text = font.render("Do you want to try again? (Y/N)", True, (0, 0, 0))
     window.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 3))
     window.blit(retry_text, (WIDTH // 2 - retry_text.get_width() // 2, HEIGHT // 2))
